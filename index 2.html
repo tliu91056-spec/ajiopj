@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Demo — 美元账户（仅娱乐）</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:linear-gradient(180deg,#0b0b0f,#0f1113);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .phone{width:380px;max-width:96vw;background:linear-gradient(180deg,#0e1113,#0b0b0f);border-radius:22px;box-shadow:0 20px 50px rgba(0,0,0,0.6);overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    header{padding:16px 16px 10px;display:flex;justify-content:space-between;align-items:center}
+    .profile-dot{width:38px;height:38px;border-radius:50%;background:linear-gradient(180deg,#2a9d8f,#21867a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#051011;font-size:14px}
+    .balance-wrap{padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02)}
+    .label{font-size:12px;color:rgba(255,255,255,0.55)}
+    .balance{margin-top:6px;font-size:22px;font-weight:800;letter-spacing:0.4px;display:flex;align-items:center;justify-content:space-between}
+    .primary-amount{display:flex;gap:8px;align-items:baseline}
+    .primary-amount .sym{font-size:18px;font-weight:900}
+    .primary-amount .amt{font-size:20px}
+    .sub-currencies{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+    .curr{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:8px 10px;border-radius:10px;display:flex;flex-direction:column;min-width:92px;border:1px solid rgba(255,255,255,0.03)}
+    .curr .label{font-size:11px;color:rgba(255,255,255,0.6)}
+    .curr .val{font-weight:700;margin-top:6px}
+    .actions{display:flex;gap:10px}
+    .btn{background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+    .icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+    .green{background:#2ecc71;color:#072b17}
+    .blue{background:#3ec1f6;color:#01242b}
+    .purple{background:#a56cff;color:#0e0020}
+    .orange{background:#ff9f43;color:#2a1300}
+    .muted{color:rgba(255,255,255,0.55);font-size:12px}
+    .tx{padding:10px 14px 18px}
+    .tx-list{max-height:160px;overflow:auto;padding-right:6px}
+    .tx-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);font-size:13px}
+    .watermark{position:absolute;left:18px;top:18px;background:rgba(255,255,255,0.06);color:#fff;padding:6px 8px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.03)}
+    footer{padding:10px 14px;color:rgba(255,255,255,0.5);font-size:12px;text-align:center}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:60}
+    .modal{width:320px;background:#0b0b0d;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    input[type="number"]{width:100%;padding:10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:white}
+    .row{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+    .danger{background:linear-gradient(180deg,#ff6b6b,#ff4c4c);color:#100;border-radius:8px;padding:8px 12px;border:none;cursor:pointer;font-weight:700}
+    .primary{background:linear-gradient(180deg,#2ec06f,#1aa65c);color:#021;border-radius:8px;padding:8px 12px;border:none;cursor:pointer;font-weight:700}
+    @media (max-width:420px){.phone{width:360px}}
+  </style>
+</head>
+<body>
+  <div style="position:relative">
+    <div class="watermark">DEMO • 仅娱乐展示</div>
+    <div class="phone" id="phone">
+      <header>
+        <div>
+          <div class="label">USD — Primary</div>
+          <div class="muted" id="accountName">Simulated USD Account</div>
+        </div>
+        <div class="profile-dot">U</div>
+      </header>
+
+      <div class="balance-wrap">
+        <div class="balance">
+          <div class="primary-amount">
+            <div class="sym">$</div>
+            <div class="amt" id="balanceAmount">120,500,000,000.00</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="addBtn">Add money</button>
+            <button class="btn" id="withdrawBtn">Withdraw</button>
+          </div>
+        </div>
+
+        <div class="sub-currencies" id="subCurrencies">
+          <div class="curr">
+            <div class="label">Bitcoin</div>
+            <div class="val" id="btcVal">2,345.12 BTC</div>
+            <div class="muted" id="btcUsd">≈ $73,000,000.00</div>
+          </div>
+          <div class="curr">
+            <div class="label">USDT (Tether)</div>
+            <div class="val" id="usdtVal">42,500,000 USDT</div>
+            <div class="muted" id="usdtUsd">≈ $42,500,000.00</div>
+          </div>
+          <div class="curr">
+            <div class="label">ETH</div>
+            <div class="val" id="ethVal">15,200 ETH</div>
+            <div class="muted" id="ethUsd">≈ $24,320,000.00</div>
+          </div>
+        </div>
+        <div style="margin-top:10px" class="muted">（仅本地演示，不连任何真实账户）</div>
+      </div>
+
+      <div class="grid" id="grid">
+        <div class="card" data-key="paychecks">
+          <div class="icon green">P</div>
+          <div>
+            <div class="title">Paychecks</div>
+            <div class="muted">Direct deposit demo</div>
+          </div>
+        </div>
+        <div class="card" data-key="bitcoin">
+          <div class="icon blue">₿</div>
+          <div>
+            <div class="title">Bitcoin</div>
+            <div class="muted">Learn and invest</div>
+          </div>
+        </div>
+        <div class="card" data-key="savings">
+          <div class="icon purple">S</div>
+          <div>
+            <div class="title">Savings</div>
+            <div class="muted">Save for a goal</div>
+          </div>
+        </div>
+        <div class="card" data-key="stocks">
+          <div class="icon orange">📈</div>
+          <div>
+            <div class="title">Stocks</div>
+            <div class="muted">Invest your $</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tx">
+        <h4 style="margin-bottom:8px">Transactions</h4>
+        <div class="tx-list" id="txList"></div>
+      </div>
+
+      <footer>演示：模拟界面与动画，不连接任何银行或支付服务。</footer>
+    </div>
+  </div>
+
+  <template id="modalTpl">
+    <div class="modal-backdrop" id="backdrop">
+      <div class="modal" role="dialog" aria-modal="true">
+        <h3 id="modalTitle">Add money</h3>
+        <div class="muted" id="modalDesc">对余额进行模拟增减（仅本地演示）。</div>
+        <div style="margin-top:10px">
+          <input type="number" id="amountInput" step="0.01" min="0" placeholder="Amount (e.g. 100.00)" />
+        </div>
+        <div class="row">
+          <button class="danger" id="cancelBtn">取消</button>
+          <button class="primary" id="confirmBtn">确认</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // formatting helper
+    function formatMoney(num){
+      const cents = Math.round(num * 100);
+      const sign = cents < 0 ? '-' : '';
+      const abs = Math.abs(cents);
+      const dollars = Math.floor(abs / 100);
+      const rem = abs % 100;
+      return sign + dollars.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + (rem<10 ? '0'+rem : rem);
+    }
+
+    let balance = 120500000000.00;
+    const balanceEl = document.getElementById('balanceAmount');
+    const txListEl = document.getElementById('txList');
+
+    function renderBalance(animated=true){
+      if(!animated){ balanceEl.textContent = formatMoney(balance); return; }
+      const start = parseFloat(balanceEl.textContent.replace(/,/g,'')) || balance;
+      const end = balance;
+      const duration = 400;
+      const startTs = performance.now();
+      function step(now){
+        const t = Math.min(1, (now - startTs) / duration);
+        const cur = start + (end - start) * (1 - Math.pow(1 - t, 3));
+        balanceEl.textContent = formatMoney(cur);
+        if(t < 1) requestAnimationFrame(step);
+        else balanceEl.textContent = formatMoney(end);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function addTransaction(type, amt, note){
+      const tr = document.createElement('div');
+      tr.className = 'tx-item';
+      const left = document.createElement('div');
+      left.innerHTML = `<div style="font-weight:700">${type}</div><div class="muted">${note || new Date().toLocaleString()}</div>`;
+      const right = document.createElement('div');
+      right.style.textAlign='right';
+      right.innerHTML = `<div style="color:${amt>=0 ? '#8ef5a8' : '#ff9f9f'}">${amt>=0? '+' : '-'}$${formatMoney(Math.abs(amt))}</div><div class="muted">${formatMoney(Math.abs(amt))}</div>`;
+      tr.appendChild(left);
+      tr.appendChild(right);
+      txListEl.prepend(tr);
+    }
+
+    function openModal(mode){
+      const tpl = document.getElementById('modalTpl');
+      const node = tpl.content.cloneNode(true);
+      const backdrop = node.querySelector('.modal-backdrop');
+      const title = node.getElementById('modalTitle');
+      const desc = node.getElementById('modalDesc');
+      const input = node.getElementById('amountInput');
+      const cancel = node.getElementById('cancelBtn');
+      const confirm = node.getElementById('confirmBtn');
+      title.textContent = mode === 'add' ? 'Add money' : 'Withdraw';
+      desc.textContent = mode === 'add' ? '在本地模拟增加余额（仅演示）。' : '在本地模拟减少余额（仅演示）。';
+      input.value = '';
+      cancel.addEventListener('click', ()=> document.body.removeChild(backdrop));
+      confirm.addEventListener('click', ()=>{
+        const val = parseFloat(input.value);
+        if(isNaN(val) || val <= 0){ alert('请输入合法金额（大于 0）。'); return; }
+        const cents = Math.round(val * 100);
+        if(mode === 'add'){
+          balance = Math.round((balance*100 + cents))/100;
+          addTransaction('Deposit', cents/100, 'Manual add (demo)');
+        } else {
+          balance = Math.round((balance*100 - cents))/100;
+          addTransaction('Withdraw', -cents/100, 'Manual withdraw (demo)');
+        }
+        renderBalance(true);
+        document.body.removeChild(backdrop);
+      });
+      document.body.appendChild(backdrop);
+    }
+
+    document.getElementById('addBtn').addEventListener('click', ()=> openModal('add'));
+    document.getElementById('withdrawBtn').addEventListener('click', ()=> openModal('withdraw'));
+
+    document.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        const key = card.dataset.key;
+        if(key === 'bitcoin'){
+          const buy = confirm('演示：是否模拟购买 0.01 BTC（花费 $500）？');
+          if(buy){
+            const cost = 500.00;
+            balance = Math.round((balance*100 - Math.round(cost*100)))/100;
+            addTransaction('Buy BTC', -cost, '0.01 BTC (demo)');
+            renderBalance(true);
+          }
+        } else if(key === 'paychecks'){
+          const deposit = confirm('模拟直薪入账 $1,200？');
+          if(deposit){
+            const amt = 1200.00;
+            balance = Math.round((balance*100 + Math.round(amt*100)))/100;
+            addTransaction('Direct Deposit', amt, 'Paycheck (demo)');
+            renderBalance(true);
+          }
+        } else if(key === 'savings'){
+          const amt = prompt('模拟将 $500 转入 Savings：','500');
+          const v = parseFloat(amt);
+          if(!isNaN(v) && v>0){
+            balance = Math.round((balance*100 - Math.round(v*100)))/100;
+            addTransaction('Transfer to Savings', -v, 'Savings (demo)');
+            renderBalance(true);
+          }
+        } else if(key === 'stocks'){
+          const buy = confirm('模拟买入股票（花费 $200）？');
+          if(buy){
+            const cost = 200.00;
+            balance = Math.round((balance*100 - Math.round(cost*100)))/100;
+            addTransaction('Buy Stocks', -cost, 'Stocks (demo)');
+            renderBalance(true);
+          }
+        }
+      });
+    });
+
+    // initial render and sample tx
+    renderBalance(false);
+    addTransaction('Promo', 1000000.00, 'Welcome bonus (demo)');
+    addTransaction('Payment', -39.99, 'Sample purchase (demo)');
+  </script>
+</body>
+</html>
