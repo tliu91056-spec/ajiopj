@@ -1,278 +1,343 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Demo — 美元账户（仅娱乐）</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:linear-gradient(180deg,#0b0b0f,#0f1113);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-    }
-    .phone{width:380px;max-width:96vw;background:linear-gradient(180deg,#0e1113,#0b0b0f);border-radius:22px;box-shadow:0 20px 50px rgba(0,0,0,0.6);overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
-    header{padding:16px 16px 10px;display:flex;justify-content:space-between;align-items:center}
-    .profile-dot{width:38px;height:38px;border-radius:50%;background:linear-gradient(180deg,#2a9d8f,#21867a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#051011;font-size:14px}
-    .balance-wrap{padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02)}
-    .label{font-size:12px;color:rgba(255,255,255,0.55)}
-    .balance{margin-top:6px;font-size:22px;font-weight:800;letter-spacing:0.4px;display:flex;align-items:center;justify-content:space-between}
-    .primary-amount{display:flex;gap:8px;align-items:baseline}
-    .primary-amount .sym{font-size:18px;font-weight:900}
-    .primary-amount .amt{font-size:20px}
-    .sub-currencies{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-    .curr{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:8px 10px;border-radius:10px;display:flex;flex-direction:column;min-width:92px;border:1px solid rgba(255,255,255,0.03)}
-    .curr .label{font-size:11px;color:rgba(255,255,255,0.6)}
-    .curr .val{font-weight:700;margin-top:6px}
-    .actions{display:flex;gap:10px}
-    .btn{background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
-    .icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
-    .green{background:#2ecc71;color:#072b17}
-    .blue{background:#3ec1f6;color:#01242b}
-    .purple{background:#a56cff;color:#0e0020}
-    .orange{background:#ff9f43;color:#2a1300}
-    .muted{color:rgba(255,255,255,0.55);font-size:12px}
-    .tx{padding:10px 14px 18px}
-    .tx-list{max-height:160px;overflow:auto;padding-right:6px}
-    .tx-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);font-size:13px}
-    .watermark{position:absolute;left:18px;top:18px;background:rgba(255,255,255,0.06);color:#fff;padding:6px 8px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.03)}
-    footer{padding:10px 14px;color:rgba(255,255,255,0.5);font-size:12px;text-align:center}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:60}
-    .modal{width:320px;background:#0b0b0d;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-    input[type="number"]{width:100%;padding:10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:white}
-    .row{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
-    .danger{background:linear-gradient(180deg,#ff6b6b,#ff4c4c);color:#100;border-radius:8px;padding:8px 12px;border:none;cursor:pointer;font-weight:700}
-    .primary{background:linear-gradient(180deg,#2ec06f,#1aa65c);color:#021;border-radius:8px;padding:8px 12px;border:none;cursor:pointer;font-weight:700}
-    @media (max-width:420px){.phone{width:360px}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Demo Wallet — Sandbox</title>
+<style>
+  :root{--bg:#0b0f1a;--card:#0f1724;--muted:#9aa6bf;--accent:#1db954;--danger:#ff6b6b}
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef6;background:linear-gradient(180deg,#071029 0%, #081428 100%);}
+  .wrap{max-width:940px;margin:18px auto;padding:16px;}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#2b6eff,#6b77ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+  h1{font-size:18px;margin:0}
+  .badge{background:#ffd54d;color:#0b0f1a;padding:6px 8px;border-radius:8px;font-weight:700;font-size:12px}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:720px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+  .balance{font-size:20px;font-weight:700}
+  .small{color:var(--muted);font-size:13px}
+  .row{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-top:8px}
+  .btn{background:var(--accent);color:#081428;padding:10px 12px;border-radius:10px;border:none;font-weight:700}
+  .btn.secondary{background:transparent;color:#cfe6d8;border:1px solid rgba(255,255,255,0.04)}
+  .asset{display:flex;align-items:center;gap:12px}
+  .coin{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .btc{background:linear-gradient(135deg,#f2a900,#ffcc66);color:#081428}
+  .usdt{background:linear-gradient(135deg,#2abf66,#6be08d);color:#081428}
+  .usd{background:linear-gradient(135deg,#9fd3ff,#66b0ff);color:#081428}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .input,select{background:transparent;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);color:#dff0ff}
+  .slider{width:100%}
+  .tx-list{max-height:260px;overflow:auto;padding-right:8px}
+  .tx{display:flex;justify-content:space-between;padding:10px;border-radius:8px;border-bottom:1px dashed rgba(255,255,255,0.02)}
+  .muted{color:var(--muted);font-size:13px}
+  footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
+  .topbar{display:flex;gap:8px;align-items:center}
+  .pill{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;font-weight:600}
+  /* modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(0deg, rgba(5,8,14,0.6), rgba(5,8,14,0.6));z-index:50}
+  .modal.open{display:flex}
+  .panel{background:var(--card);padding:16px;border-radius:12px;width:min(520px,94%);border:1px solid rgba(255,255,255,0.03)}
+  .close{background:transparent;border:0;color:var(--muted);font-weight:700}
+  /* tiny */
+  .tiny{font-size:12px;color:var(--muted)}
+  .status-pending{color:#f59e0b}
+  .status-done{color:#34d399}
+</style>
 </head>
 <body>
-  <div style="position:relative">
-    <div class="watermark">DEMO • 仅娱乐展示</div>
-    <div class="phone" id="phone">
-      <header>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">DW</div>
+      <div>
+        <h1>Demo Wallet</h1>
+        <div class="tiny">Local sandbox — simulated balances</div>
+      </div>
+    </div>
+    <div class="topbar">
+      <div class="badge">DEMO / SANDBOX</div>
+      <div class="pill tiny" id="serverTime"></div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
-          <div class="label">USD — Primary</div>
-          <div class="muted" id="accountName">Simulated USD Account</div>
+          <div class="small">USD Account</div>
+          <div class="balance" id="usdBalance">$0</div>
+          <div class="tiny">Account number: 5480-XXXX-XXXX</div>
         </div>
-        <div class="profile-dot">U</div>
-      </header>
-
-      <div class="balance-wrap">
-        <div class="balance">
-          <div class="primary-amount">
-            <div class="sym">$</div>
-            <div class="amt" id="balanceAmount">120,500,000,000.00</div>
-          </div>
-          <div class="actions">
-            <button class="btn" id="addBtn">Add money</button>
-            <button class="btn" id="withdrawBtn">Withdraw</button>
-          </div>
-        </div>
-
-        <div class="sub-currencies" id="subCurrencies">
-          <div class="curr">
-            <div class="label">Bitcoin</div>
-            <div class="val" id="btcVal">2,345.12 BTC</div>
-            <div class="muted" id="btcUsd">≈ $73,000,000.00</div>
-          </div>
-          <div class="curr">
-            <div class="label">USDT (Tether)</div>
-            <div class="val" id="usdtVal">42,500,000 USDT</div>
-            <div class="muted" id="usdtUsd">≈ $42,500,000.00</div>
-          </div>
-          <div class="curr">
-            <div class="label">ETH</div>
-            <div class="val" id="ethVal">15,200 ETH</div>
-            <div class="muted" id="ethUsd">≈ $24,320,000.00</div>
-          </div>
-        </div>
-        <div style="margin-top:10px" class="muted">（仅本地演示，不连任何真实账户）</div>
-      </div>
-
-      <div class="grid" id="grid">
-        <div class="card" data-key="paychecks">
-          <div class="icon green">P</div>
-          <div>
-            <div class="title">Paychecks</div>
-            <div class="muted">Direct deposit demo</div>
-          </div>
-        </div>
-        <div class="card" data-key="bitcoin">
-          <div class="icon blue">₿</div>
-          <div>
-            <div class="title">Bitcoin</div>
-            <div class="muted">Learn and invest</div>
-          </div>
-        </div>
-        <div class="card" data-key="savings">
-          <div class="icon purple">S</div>
-          <div>
-            <div class="title">Savings</div>
-            <div class="muted">Save for a goal</div>
-          </div>
-        </div>
-        <div class="card" data-key="stocks">
-          <div class="icon orange">📈</div>
-          <div>
-            <div class="title">Stocks</div>
-            <div class="muted">Invest your $</div>
+        <div style="text-align:right">
+          <div class="small">Available</div>
+          <div class="muted tiny" id="usdAvailable">—</div>
+          <div style="margin-top:12px">
+            <button class="btn" id="btnTransfer">Transfer</button>
+            <button class="btn secondary" id="btnWithdraw">Withdraw</button>
           </div>
         </div>
       </div>
 
-      <div class="tx">
-        <h4 style="margin-bottom:8px">Transactions</h4>
-        <div class="tx-list" id="txList"></div>
+      <hr style="margin:12px 0;border:0;border-top:1px solid rgba(255,255,255,0.02)">
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="asset">
+          <div class="coin usd">USD</div>
+          <div><div class="small">USD</div><div id="usdVal" class="muted tiny">$1 = $1</div></div>
+        </div>
+
+        <div class="asset">
+          <div class="coin btc">BTC</div>
+          <div><div class="small" id="btcPriceLabel">BTC</div><div id="btcVal" class="muted tiny">—</div></div>
+        </div>
+
+        <div class="asset">
+          <div class="coin usdt">USDT</div>
+          <div><div class="small">USDT</div><div id="usdtVal" class="muted tiny">—</div></div>
+        </div>
       </div>
 
-      <footer>演示：模拟界面与动画，不连接任何银行或支付服务。</footer>
+      <div style="margin-top:12px" class="controls">
+        <select id="actionSelect" class="input">
+          <option value="send">Send USD</option>
+          <option value="deposit">Deposit USD</option>
+          <option value="swap">Swap USD ↔ Crypto</option>
+          <option value="buybtc">Buy BTC (sim)</option>
+        </select>
+        <input id="amountInput" class="input" type="number" placeholder="Amount (USD)" />
+        <input id="range" class="slider" type="range" min="0" max="100" value="5" />
+        <button class="btn" id="actionBtn">Execute</button>
+      </div>
+
+      <div style="margin-top:10px" class="tiny muted">Tip: use the slider to pick percentage of USD balance for the action.</div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="small">Crypto Balances</div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <div>
+              <div class="tiny">BTC</div>
+              <div id="btcBal" class="balance">0.00</div>
+            </div>
+            <div>
+              <div class="tiny">USDT</div>
+              <div id="usdtBal" class="balance">0.00</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button class="btn" id="btnReceive">Receive</button>
+          <button class="btn secondary" id="btnSwap">Swap</button>
+        </div>
+      </div>
+
+      <hr style="margin:12px 0;border:0;border-top:1px solid rgba(255,255,255,0.02)">
+
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+        <div class="tiny muted">Transactions</div>
+        <div class="tiny muted">Simulated & local only</div>
+      </div>
+
+      <div class="tx-list" id="txList" aria-live="polite" style="margin-top:10px">
+        <!-- transactions injected here -->
+      </div>
     </div>
   </div>
 
-  <template id="modalTpl">
-    <div class="modal-backdrop" id="backdrop">
-      <div class="modal" role="dialog" aria-modal="true">
-        <h3 id="modalTitle">Add money</h3>
-        <div class="muted" id="modalDesc">对余额进行模拟增减（仅本地演示）。</div>
-        <div style="margin-top:10px">
-          <input type="number" id="amountInput" step="0.01" min="0" placeholder="Amount (e.g. 100.00)" />
-        </div>
-        <div class="row">
-          <button class="danger" id="cancelBtn">取消</button>
-          <button class="primary" id="confirmBtn">确认</button>
-        </div>
+  <footer>Demo Wallet — sandbox only. Local simulation. No real funds.</footer>
+</div>
+
+<!-- modal -->
+<div id="modal" class="modal" role="dialog" aria-modal="true">
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <strong id="modalTitle">Action</strong>
+      <button class="close" id="closeModal">✕</button>
+    </div>
+    <div style="margin-top:10px">
+      <div class="tiny muted" id="modalDesc">Details</div>
+      <div style="margin-top:10px">
+        <label class="tiny">Amount</label>
+        <input id="modalAmount" class="input" type="number" />
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;">
+        <button class="btn" id="modalConfirm">Confirm</button>
+        <button class="btn secondary" id="modalCancel">Cancel</button>
       </div>
     </div>
-  </template>
+  </div>
+</div>
 
-  <script>
-    // formatting helper
-    function formatMoney(num){
-      const cents = Math.round(num * 100);
-      const sign = cents < 0 ? '-' : '';
-      const abs = Math.abs(cents);
-      const dollars = Math.floor(abs / 100);
-      const rem = abs % 100;
-      return sign + dollars.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + (rem<10 ? '0'+rem : rem);
+<script>
+(function(){
+  // ====== initial simulated state ======
+  const state = {
+    usd: 3_250_000_000, // 3.25 billion USD simulated
+    btc: 72_000, // BTC price simulated in USD
+    usdt: 1.00,
+    btcBal: 145.2345,
+    usdtBal: 1200000.00,
+    tx: []
+  };
+
+  // load from localStorage if present
+  const saved = localStorage.getItem('demo_wallet_state_v1');
+  if(saved){
+    try{ Object.assign(state, JSON.parse(saved)); }catch(e){}
+  }
+
+  // util
+  const $ = id => document.getElementById(id);
+  const fmt = (n,dec=2) => Number(n).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});
+
+  // render
+  function render(){
+    $('usdBalance').textContent = '$' + fmt(state.usd,2);
+    $('usdAvailable').textContent = '$' + fmt(state.usd,2);
+    $('btcPriceLabel').textContent = 'BTC • $' + fmt(state.btc,0);
+    $('btcVal').textContent = '$' + fmt(state.btc,2);
+    $('usdtVal').textContent = '1 USDT = $' + fmt(state.usdt,2);
+    $('btcBal').textContent = fmt(state.btcBal,6);
+    $('usdtBal').textContent = fmt(state.usdtBal,2);
+    $('serverTime').textContent = (new Date()).toLocaleString();
+    renderTx();
+    localStorage.setItem('demo_wallet_state_v1', JSON.stringify(state));
+  }
+
+  function addTx(type, amount, asset, status='pending'){
+    const t = {id:Date.now()+Math.random(), type, amount, asset, time:new Date().toISOString(), status};
+    state.tx.unshift(t);
+    // auto-complete pending after a short simulated delay
+    setTimeout(()=>{ t.status='done'; render(); }, 900 + Math.random()*1800);
+    render();
+  }
+
+  function renderTx(){
+    const list = $('txList');
+    list.innerHTML = '';
+    if(state.tx.length===0){
+      list.innerHTML = '<div class="tx muted">No transactions yet.</div>';
+      return;
     }
-
-    let balance = 120500000000.00;
-    const balanceEl = document.getElementById('balanceAmount');
-    const txListEl = document.getElementById('txList');
-
-    function renderBalance(animated=true){
-      if(!animated){ balanceEl.textContent = formatMoney(balance); return; }
-      const start = parseFloat(balanceEl.textContent.replace(/,/g,'')) || balance;
-      const end = balance;
-      const duration = 400;
-      const startTs = performance.now();
-      function step(now){
-        const t = Math.min(1, (now - startTs) / duration);
-        const cur = start + (end - start) * (1 - Math.pow(1 - t, 3));
-        balanceEl.textContent = formatMoney(cur);
-        if(t < 1) requestAnimationFrame(step);
-        else balanceEl.textContent = formatMoney(end);
-      }
-      requestAnimationFrame(step);
-    }
-
-    function addTransaction(type, amt, note){
-      const tr = document.createElement('div');
-      tr.className = 'tx-item';
-      const left = document.createElement('div');
-      left.innerHTML = `<div style="font-weight:700">${type}</div><div class="muted">${note || new Date().toLocaleString()}</div>`;
-      const right = document.createElement('div');
-      right.style.textAlign='right';
-      right.innerHTML = `<div style="color:${amt>=0 ? '#8ef5a8' : '#ff9f9f'}">${amt>=0? '+' : '-'}$${formatMoney(Math.abs(amt))}</div><div class="muted">${formatMoney(Math.abs(amt))}</div>`;
-      tr.appendChild(left);
-      tr.appendChild(right);
-      txListEl.prepend(tr);
-    }
-
-    function openModal(mode){
-      const tpl = document.getElementById('modalTpl');
-      const node = tpl.content.cloneNode(true);
-      const backdrop = node.querySelector('.modal-backdrop');
-      const title = node.getElementById('modalTitle');
-      const desc = node.getElementById('modalDesc');
-      const input = node.getElementById('amountInput');
-      const cancel = node.getElementById('cancelBtn');
-      const confirm = node.getElementById('confirmBtn');
-      title.textContent = mode === 'add' ? 'Add money' : 'Withdraw';
-      desc.textContent = mode === 'add' ? '在本地模拟增加余额（仅演示）。' : '在本地模拟减少余额（仅演示）。';
-      input.value = '';
-      cancel.addEventListener('click', ()=> document.body.removeChild(backdrop));
-      confirm.addEventListener('click', ()=>{
-        const val = parseFloat(input.value);
-        if(isNaN(val) || val <= 0){ alert('请输入合法金额（大于 0）。'); return; }
-        const cents = Math.round(val * 100);
-        if(mode === 'add'){
-          balance = Math.round((balance*100 + cents))/100;
-          addTransaction('Deposit', cents/100, 'Manual add (demo)');
-        } else {
-          balance = Math.round((balance*100 - cents))/100;
-          addTransaction('Withdraw', -cents/100, 'Manual withdraw (demo)');
-        }
-        renderBalance(true);
-        document.body.removeChild(backdrop);
-      });
-      document.body.appendChild(backdrop);
-    }
-
-    document.getElementById('addBtn').addEventListener('click', ()=> openModal('add'));
-    document.getElementById('withdrawBtn').addEventListener('click', ()=> openModal('withdraw'));
-
-    document.querySelectorAll('.card').forEach(card=>{
-      card.addEventListener('click', ()=>{
-        const key = card.dataset.key;
-        if(key === 'bitcoin'){
-          const buy = confirm('演示：是否模拟购买 0.01 BTC（花费 $500）？');
-          if(buy){
-            const cost = 500.00;
-            balance = Math.round((balance*100 - Math.round(cost*100)))/100;
-            addTransaction('Buy BTC', -cost, '0.01 BTC (demo)');
-            renderBalance(true);
-          }
-        } else if(key === 'paychecks'){
-          const deposit = confirm('模拟直薪入账 $1,200？');
-          if(deposit){
-            const amt = 1200.00;
-            balance = Math.round((balance*100 + Math.round(amt*100)))/100;
-            addTransaction('Direct Deposit', amt, 'Paycheck (demo)');
-            renderBalance(true);
-          }
-        } else if(key === 'savings'){
-          const amt = prompt('模拟将 $500 转入 Savings：','500');
-          const v = parseFloat(amt);
-          if(!isNaN(v) && v>0){
-            balance = Math.round((balance*100 - Math.round(v*100)))/100;
-            addTransaction('Transfer to Savings', -v, 'Savings (demo)');
-            renderBalance(true);
-          }
-        } else if(key === 'stocks'){
-          const buy = confirm('模拟买入股票（花费 $200）？');
-          if(buy){
-            const cost = 200.00;
-            balance = Math.round((balance*100 - Math.round(cost*100)))/100;
-            addTransaction('Buy Stocks', -cost, 'Stocks (demo)');
-            renderBalance(true);
-          }
-        }
-      });
+    state.tx.forEach(tx=>{
+      const div = document.createElement('div');
+      div.className='tx';
+      div.innerHTML = `<div><div style="font-weight:700">${escapeHtml(tx.type)} ${escapeHtml(tx.asset)}</div><div class="tiny muted">${new Date(tx.time).toLocaleString()}</div></div>
+        <div style="text-align:right"><div style="font-weight:700">${tx.asset==="USD"?"$"+fmt(tx.amount,2):fmt(tx.amount,6)}</div><div class="${tx.status==='done'?'status-done':'status-pending'} tiny">${escapeHtml(tx.status)}</div></div>`;
+      list.appendChild(div);
     });
+  }
 
-    // initial render and sample tx
-    renderBalance(false);
-    addTransaction('Promo', 1000000.00, 'Welcome bonus (demo)');
-    addTransaction('Payment', -39.99, 'Sample purchase (demo)');
-  </script>
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ====== interactions ======
+  $('actionSelect').addEventListener('change', ()=>{ $('amountInput').placeholder = $('actionSelect').value.includes('swap') ? 'Amount (USD) or crypto' : 'Amount (USD)'; });
+  $('range').addEventListener('input', ()=>{
+    const pct = Number($('range').value);
+    const amount = Math.max(0, state.usd * pct/100);
+    $('amountInput').value = Math.round(amount*100)/100;
+  });
+
+  $('actionBtn').addEventListener('click', ()=>{
+    const action = $('actionSelect').value;
+    const raw = Number($('amountInput').value) || 0;
+    if(action === 'send'){
+      openModal('Send USD', `Send $${fmt(raw,2)} as a simulated USD transfer.`, raw, confirmSend);
+    } else if(action === 'deposit'){
+      openModal('Deposit USD', `Simulate depositing $${fmt(raw,2)} to USD account.`, raw, confirmDeposit);
+    } else if(action === 'swap'){
+      openModal('Swap', `Swap USD to BTC or USDT (simulated). Enter USD amount.`, raw, confirmSwap);
+    } else if(action === 'buybtc'){
+      openModal('Buy BTC', `Buy BTC with USD (simulated). Enter USD amount.`, raw, confirmBuyBTC);
+    }
+  });
+
+  $('btnTransfer').addEventListener('click', ()=> openModal('Quick Transfer','Send a simulated USD transfer',1000,confirmSend));
+  $('btnWithdraw').addEventListener('click', ()=> openModal('Withdraw','Simulated withdraw (no real movement).',50000,confirmWithdraw));
+  $('btnReceive').addEventListener('click', ()=> {
+    // simulate receiving funds
+    const amt = Math.round((Math.random()*50000+1000)*100)/100;
+    state.usd += amt;
+    addTx('Receive', amt, 'USD');
+    render();
+  });
+  $('btnSwap').addEventListener('click', ()=> openModal('Swap USD→USDT','Quick swap USD to USDT (1:1 sim).',1000,confirmSwap));
+  $('closeModal').addEventListener('click', closeModal);
+  $('modalCancel').addEventListener('click', closeModal);
+
+  function openModal(title, desc, amount, cb){
+    $('modalTitle').textContent = title;
+    $('modalDesc').textContent = desc;
+    $('modalAmount').value = amount || '';
+    $('modalConfirm').onclick = function(){ cb(Number($('modalAmount').value || 0)); closeModal(); };
+    $('modal').classList.add('open');
+  }
+  function closeModal(){ $('modal').classList.remove('open'); }
+
+  // confirm handlers
+  function confirmSend(amount){
+    if(amount<=0) return alert('Enter an amount > 0');
+    if(amount > state.usd) return alert('Insufficient simulated USD balance.');
+    state.usd -= amount;
+    addTx('Send', amount, 'USD');
+    render();
+  }
+  function confirmDeposit(amount){
+    if(amount<=0) return alert('Enter an amount > 0');
+    state.usd += amount;
+    addTx('Deposit', amount, 'USD');
+    render();
+  }
+  function confirmWithdraw(amount){
+    if(amount<=0) return alert('Enter an amount > 0');
+    if(amount > state.usd) return alert('Insufficient simulated USD balance.');
+    state.usd -= amount;
+    addTx('Withdraw', amount, 'USD');
+    render();
+  }
+  function confirmSwap(amount){
+    if(amount<=0) return alert('Enter an amount > 0');
+    if(amount > state.usd) return alert('Insufficient simulated USD balance.');
+    // simple: convert USD -> USDT 1:1
+    state.usd -= amount;
+    state.usdtBal += amount / state.usdt;
+    addTx('Swap USD→USDT', amount, 'USDT');
+    render();
+  }
+  function confirmBuyBTC(amount){
+    if(amount<=0) return alert('Enter an amount > 0');
+    if(amount > state.usd) return alert('Insufficient simulated USD balance.');
+    const btcAmount = amount / state.btc;
+    state.usd -= amount;
+    state.btcBal += btcAmount;
+    addTx('Buy BTC', btcAmount, 'BTC');
+    render();
+  }
+
+  // small price simulator
+  setInterval(()=>{
+    // random walk BTC, keep USDT=1
+    const delta = (Math.random()-0.5)*500; // small moves
+    state.btc = Math.max(1000, Math.round((state.btc + delta)));
+    render();
+  }, 3500);
+
+  // keyboard friendly
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') closeModal();
+  });
+
+  // initialize
+  render();
+
+  // expose debug in window for tinkering (local) only
+  window.__demo_wallet = {state, addTx, render};
+
+})();
+</script>
 </body>
 </html>
